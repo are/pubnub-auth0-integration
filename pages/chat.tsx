@@ -30,9 +30,9 @@ export default function ChatPage() {
         let token
 
         try {
-          token = await getAccessTokenSilently({ audience: 'http://localhost:3000/api' })
+          token = await getAccessTokenSilently({ audience: `${window.location.origin}/api` })
         } catch (e) {
-          token = await getAccessTokenWithPopup({ audience: 'http://localhost:3000/api' })
+          token = await getAccessTokenWithPopup({ audience: `${window.location.origin}/api` })
         }
 
         const res = await fetch(new URL('/api/login', window.location.origin), {

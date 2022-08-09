@@ -14,7 +14,7 @@ const jwtCheck = expressjwt({
     jwksRequestsPerMinute: 5,
     jwksUri: 'https://dev-go9eq5m8.us.auth0.com/.well-known/jwks.json',
   }) as any,
-  audience: 'http://localhost:3000/api',
+  audience: `https://${process.env.VERCEL_URL ?? 'localhost:3000'}/api`,
   issuer: 'https://dev-go9eq5m8.us.auth0.com/',
   algorithms: ['RS256'],
 })
