@@ -3,7 +3,7 @@ import { Avatar, Button, CircularProgress, Icon, Paper, Skeleton, Stack, TextFie
 import Grid from '@mui/material/Grid'
 import { MessageEvent, PresenceEvent } from 'pubnub'
 import { usePubNub } from 'pubnub-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import useCache from '../utils/useCache'
 import OnlineUsers from './OnlineUsers'
 
@@ -12,6 +12,7 @@ export default function ChatView({ ready, userId }: { ready: boolean; userId: st
   const [onlineUsers, setOnlineUsers] = useState<string[]>([])
   const [messages, setMessages] = useState<MessageEvent[]>([])
   const [newMessage, setNewMessage] = useState<string>('')
+  const chatboxRef = useRef<any>()
 
   const pubnub = usePubNub()
 
@@ -26,6 +27,9 @@ export default function ChatView({ ready, userId }: { ready: boolean; userId: st
       const listener = {
         message(messageEvent: MessageEvent) {
           setMessages((m) => [messageEvent, ...m])
+          if (chatboxRef.current) {
+            chatboxRef.current.scrollIntoView(false)
+          }
         },
         presence(presenceEvent: PresenceEvent) {
           switch (presenceEvent.action) {
@@ -104,8 +108,18 @@ export default function ChatView({ ready, userId }: { ready: boolean; userId: st
         </Stack>
       </Grid>
       <Grid item container direction="row" justifyContent="center" alignItems="stretch" gap={2} flexGrow={1}>
-        <Grid item container direction="column" xs={8}>
-          <Grid item container direction="column-reverse" flexGrow={1} gap={2}>
+        <Grid item container direction="column" xs={8} flexWrap="nowrap" maxHeight="90vh">
+          <Grid
+            item
+            container
+            direction="column-reverse"
+            flexGrow={1}
+            gap={2}
+            overflow="scroll"
+            flexWrap="nowrap"
+            paddingRight="32px"
+            ref={chatboxRef as any}
+          >
             {messages.map((messageEvent) => (
               <Grid item key={messageEvent.timetoken} alignSelf={messageEvent.publisher === userId ? 'end' : 'start'}>
                 <Stack direction="column" alignItems={messageEvent.publisher === userId ? 'end' : 'start'}>
