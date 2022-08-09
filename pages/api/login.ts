@@ -14,7 +14,7 @@ const jwtCheck = expressjwt({
     jwksRequestsPerMinute: 5,
     jwksUri: 'https://dev-go9eq5m8.us.auth0.com/.well-known/jwks.json',
   }) as any,
-  audience: `https://${process.env.VERCEL_URL ?? 'localhost:3000'}/api`,
+  audience: `http://localhost:3000/api`,
   issuer: 'https://dev-go9eq5m8.us.auth0.com/',
   algorithms: ['RS256'],
 })
@@ -49,6 +49,7 @@ export default async function handler(req: NextApiRequest & { auth: { sub: strin
   try {
     await runMiddleware(req, res, jwtCheck)
   } catch (e) {
+    console.error(e)
     return res.status(403).json({ success: false, error: 'Unauthenticated' })
   }
 
@@ -87,6 +88,7 @@ export default async function handler(req: NextApiRequest & { auth: { sub: strin
 
     return res.status(200).json({ success: true, token: token })
   } catch (e) {
+    console.error(e)
     return res.status(500).json({ success: false, error: 'Grant failed' })
   }
 }
