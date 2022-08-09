@@ -131,7 +131,14 @@ export default function ChatView({ ready, userId }: { ready: boolean; userId: st
             ))}
           </Grid>
           <Grid item marginBottom={2} marginTop={3}>
-            <TextField variant="standard" fullWidth onChange={onChange} onKeyUp={onKeyUp} value={newMessage} />
+            <TextField
+              variant="standard"
+              fullWidth
+              onChange={onChange}
+              onKeyUp={onKeyUp}
+              value={newMessage}
+              disabled={!ready}
+            />
           </Grid>
         </Grid>
         <Grid item xs={3}>
